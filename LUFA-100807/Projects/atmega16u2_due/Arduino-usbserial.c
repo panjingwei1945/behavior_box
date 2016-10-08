@@ -4,7 +4,7 @@
 
      Copyright (C) Dean Camera, 2010.
 
-              
+
 
   dean [at] fourwalledcubicle [dot] com
 
@@ -20,19 +20,19 @@
 
 
 
-  Permission to use, copy, modify, distribute, and sell this 
+  Permission to use, copy, modify, distribute, and sell this
 
   software and its documentation for any purpose is hereby granted
 
-  without fee, provided that the above copyright notice appear in 
+  without fee, provided that the above copyright notice appear in
 
   all copies and that both that the copyright notice and this
 
-  permission notice and warranty disclaimer appear in supporting 
+  permission notice and warranty disclaimer appear in supporting
 
-  documentation, and that the name of the author not be used in 
+  documentation, and that the name of the author not be used in
 
-  advertising or publicity pertaining to distribution of the 
+  advertising or publicity pertaining to distribution of the
 
   software without specific, written prior permission.
 
@@ -73,7 +73,7 @@
 #include "Arduino-usbserial.h"
 
 
-
+/******soft uplading variables***************************/
 #define HIGH true
 
 #define LOW false
@@ -82,7 +82,7 @@
 
 #define UPLOAD_REQ 5
 
-#define TX_IN 6 
+#define TX_IN 6
 
 #define ERASE_CMD 7
 
@@ -97,6 +97,7 @@ unsigned char ex_resettime = 0;
 bool tmp_erase_cmd = false;
 
 bool tmp_erase_cmd_last = false;
+/******soft uplading variables***************************/
 
 
 
@@ -140,7 +141,7 @@ USB_ClassInfo_CDC_Device_t VirtualSerial_CDC_Interface =
 
 	{
 
-		.Config = 
+		.Config =
 
 			{
 
@@ -256,7 +257,7 @@ int main(void)
 
 	SetupHardware();
 
-	
+
 
 	RingBuffer_InitBuffer(&USBtoUSART_Buffer);
 
@@ -266,8 +267,8 @@ int main(void)
 
 	sei();
 
-	
 
+/****init all pins used by soft uploading**********************/
 	DDRB &= ~_BV(TX_IN);
 
 	cmdwrite(TX_IN, HIGH);
@@ -284,6 +285,7 @@ int main(void)
 
 	cmdwrite(UPLOAD_REQ, HIGH);
 
+/****init all pins used by soft uploading**********************/
 
 
 	for (;;)
@@ -292,17 +294,18 @@ int main(void)
 
 
 
-		if(!cmdread(UPLOAD_REQ))
+/**** generate the soft uploading**********************/
+		if(!cmdread(UPLOAD_REQ)) // if the UPLOAD_REQ go to LOW, chip will get into soft uplaoding mode.
 
 		{
 
-			cli();
+			cli(); // shutdown globle interrupt.
 
-			Serial_ShutDown();
+			Serial_ShutDown(); //shutown CDC mode .
 
 			DDRD |= _BV(3); //set PB3 to output
 
-			txwrite(5, cmdread(UPLOAD_REQ));
+			txwrite(5, cmdread(UPLOAD_REQ)); // start upload statment led.
 
 			cmdwrite(UPLOAD_PER, HIGH);
 
@@ -310,23 +313,24 @@ int main(void)
 
 			{
 
-				setErasePin(!cmdread(ERASE_CMD));
+				setErasePin(!cmdread(ERASE_CMD)); // erase the due, need at least 200 ms.
 
-				txwrite(3, cmdread(TX_IN));
+				txwrite(3, cmdread(TX_IN)); // transmit the tx signal.
 
-				txwrite(4, cmdread(TX_IN));
+				txwrite(4, cmdread(TX_IN)); // shining the tx led.
 
 			}
 
-			cmdwrite(UPLOAD_PER, LOW);
+			cmdwrite(UPLOAD_PER, LOW); // complete the uploading.
 
-			txwrite(5, cmdread(UPLOAD_REQ));
+			txwrite(5, cmdread(UPLOAD_REQ)); // shutdown start upload statment led.
 
-			Serial_Init(9600, false);
+			Serial_Init(9600, false); // reenable CDC.
 
-			sei();
+			sei(); // reopen global interrupt.
 
 		}
+/**** generate the soft uploading**********************/
 
 		// Only try to read in bytes from the CDC interface if the transmit buffer is not full
 
@@ -346,7 +350,7 @@ int main(void)
 
 		}
 
-		
+
 
 		// Check if the UART receive buffer flush timer has expired or the buffer is nearly full
 
@@ -376,7 +380,7 @@ int main(void)
 
 			  CDC_Device_SendByte(&VirtualSerial_CDC_Interface, RingBuffer_Remove(&USARTtoUSB_Buffer));
 
-			  
+
 
 			// Turn off TX LED(s) once the TX pulse period has elapsed
 
@@ -440,7 +444,7 @@ int main(void)
 
 		}
 
-		
+
 
 		// Load the next byte from the USART transmit buffer into the USART
 
@@ -454,7 +458,7 @@ int main(void)
 
 		}
 
-		
+
 
 		CDC_Device_USBTask(&VirtualSerial_CDC_Interface);
 
@@ -490,7 +494,7 @@ void SetupHardware(void)
 
 	AVR_ERASE_LINE_PORT |= AVR_ERASE_LINE_MASK;
 
-	AVR_ERASE_LINE_DDR  |= AVR_ERASE_LINE_MASK;	
+	AVR_ERASE_LINE_DDR  |= AVR_ERASE_LINE_MASK;
 
 
 
@@ -558,13 +562,13 @@ void EVENT_CDC_Device_LineEncodingChanged(USB_ClassInfo_CDC_Device_t* const CDCI
 
 		case CDC_PARITY_Odd:
 
-			ConfigMask = ((1 << UPM11) | (1 << UPM10));		
+			ConfigMask = ((1 << UPM11) | (1 << UPM10));
 
 			break;
 
 		case CDC_PARITY_Even:
 
-			ConfigMask = (1 << UPM11);		
+			ConfigMask = (1 << UPM11);
 
 			break;
 
@@ -691,7 +695,3 @@ void EVENT_CDC_Device_ControLineStateChanged(USB_ClassInfo_CDC_Device_t* const C
 	}
 
 }
-
-
-
-
