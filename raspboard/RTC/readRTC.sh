@@ -10,7 +10,7 @@ DATE_ADDR=0x04
 MON_ADDR=0x05
 YEAR_ADDR=0x06
 
-i2cdetect -y 1 
+i2cdetect -y 1
 i2cdump -y 1 $CHIP_ADDR
 
 sec=`i2cget -y 1 $CHIP_ADDR $SEC_ADDR`
@@ -23,5 +23,6 @@ year=`i2cget -y 1 $CHIP_ADDR $YEAR_ADDR`
 
 echo "Sys time is" `date +%y%m%d%H%M%S`
 echo "RTC time is" ${year:2:2}${mon:2:2}${date:2:2}${hour:2:2}${min:2:2}${sec:2:2}
+
 
 

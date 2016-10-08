@@ -19,7 +19,7 @@ sec=0x`date +%S`
 
 echo "System time is:" `date +%y%m%d%H%M%S`
 
-i2cdetect -y 1 
+i2cdetect -y 1
 i2cdump -y 1 $CHIP_ADDR
 
 i2cset -y 1 $CHIP_ADDR $SEC_ADDR $sec
