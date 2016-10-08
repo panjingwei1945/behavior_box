@@ -1,2 +1,3 @@
 # behavior_box
-behavior_box for mice train system,
+
+This repository contains all the firmware and src of behavior_box system.
