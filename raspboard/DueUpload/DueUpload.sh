@@ -32,7 +32,15 @@ sleep 0.1
 
 #upload
 stty -F /dev/ttyAMA0 speed 1200 cs8;${DUE}/packages/arduino/tools/bossac/1.6.1-arduino/bossac -i -d --port=ttyAMA0 -U false -e -w -v -b ${FIRMWARE} -R
+sleep 0.1
 
+#reset
+gpio write $RES 0
+sleep 0.1
+gpio write $RES 1
+sleep 0.1
+
+#release
 gpio write $REQ 1
 sleep 0.1
 
