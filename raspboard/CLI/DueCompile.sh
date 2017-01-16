@@ -5,7 +5,7 @@ USERLIB="/home/pi/Arduino/libraries"
 CODE=$1
 CODEFILENAME=`basename $1`
 
-if[ -n $2 ]
+if [ -n "$2" ]
 then
   BUILDPATH=$2
 else

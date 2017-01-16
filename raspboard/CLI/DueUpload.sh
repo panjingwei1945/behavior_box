@@ -2,7 +2,7 @@
 
 BOSSAC="/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino/bossac"
 
-if[ -n ${BINFILE} ]
+if [ -n "${BINFILE}" ]
 then
   FIRMWARE=${BINFILE}
 else

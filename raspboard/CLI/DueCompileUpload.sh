@@ -1,5 +1,10 @@
 #!/bin/bash
 
-. ./DueCompile.sh
+CODEFOLDER=`dirname $0`
 
-. ./DueUpload.sh
+. ${CODEFOLDER}/DueCompile.sh
+
+. ${CODEFOLDER}/DueUpload.sh
+
+
+
