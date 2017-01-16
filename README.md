@@ -6,7 +6,7 @@ This repository contains all the firmware and src of behavior_box system.
 
 ## Due modification
 
-> Arduino Due is different from the avr based arduino board (like uno). It must be erased before uploading. Therefore Due must be modified before assembling, to ensure raspberry pi can upload program from it's own native serial port(ttyAMA0).
+> Arduino Due is different from the avr based arduino board (like uno). It must be erased before uploading. Therefore Due must be modified before assembling, to ensure raspberry pi can upload program from it's onboard native serial port(ttyAMA0).
 
 1. Solder the **missing pin** on Due
   ![/README/SolderMissingPins.PNG](/README/SolderMissingPins.PNG)
