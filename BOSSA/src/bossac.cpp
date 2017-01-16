@@ -378,25 +378,25 @@ main(int argc, char* argv[])
 /**********SOFT ERASE***********/
 /**********SOFT ERASE***********/
     GPIOExport(PER);
-    sleep(0.01);
+    usleep(10000);
     GPIODirection(PER, IN);
 
     GPIOExport(REQ);
-    sleep(0.01);
+    usleep(10000);
     GPIODirection(REQ, OUT);
-    sleep(0.01);
+    usleep(10000);
     GPIOWrite(REQ, HIGH);
 
     GPIOExport(RES);
-    sleep(0.01);
+    usleep(10000);
     GPIODirection(RES, OUT);
-    sleep(0.01);
+    usleep(10000);
     GPIOWrite(RES, HIGH);
 
     GPIOExport(ERA);
-    sleep(0.01);
+    usleep(10000);
     GPIODirection(ERA, OUT);
-    sleep(0.01);
+    usleep(10000);
     GPIOWrite(ERA, HIGH);
 /**********SOFT ERASE***********/
 /**********SOFT ERASE***********/
@@ -476,10 +476,11 @@ main(int argc, char* argv[])
           }
         }
         GPIOWrite(ERA, LOW);
+        usleep(10000);
         GPIOWrite(RES, LOW);
-        sleep(0.01);
+        usleep(10000);
         GPIOWrite(RES, HIGH);
-        sleep(0.5);
+        usleep(500000);
         GPIOWrite(ERA, HIGH);
 
         /**********SOFT ERASE***********/
