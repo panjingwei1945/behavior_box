@@ -378,26 +378,30 @@ main(int argc, char* argv[])
 /**********SOFT ERASE***********/
 /**********SOFT ERASE***********/
     GPIOExport(PER);
-    usleep(10000);
+    usleep(100000);
     GPIODirection(PER, IN);
 
+    usleep(100000);
     GPIOExport(REQ);
-    usleep(10000);
+    usleep(100000);
     GPIODirection(REQ, OUT);
-    usleep(10000);
+    usleep(100000);
     GPIOWrite(REQ, HIGH);
 
+    usleep(100000);
     GPIOExport(RES);
-    usleep(10000);
+    usleep(100000);
     GPIODirection(RES, OUT);
-    usleep(10000);
+    usleep(100000);
     GPIOWrite(RES, HIGH);
 
+    usleep(100000);
     GPIOExport(ERA);
-    usleep(10000);
+    usleep(100000);
     GPIODirection(ERA, OUT);
-    usleep(10000);
+    usleep(100000);
     GPIOWrite(ERA, HIGH);
+    usleep(100000);
 /**********SOFT ERASE***********/
 /**********SOFT ERASE***********/
 
@@ -464,6 +468,7 @@ main(int argc, char* argv[])
         /**********SOFT ERASE***********/
         /**********SOFT ERASE***********/
         GPIOWrite(REQ, 0);
+		usleep(100000);
         int tmp_per = 0;
         while(1)
         {
@@ -475,14 +480,6 @@ main(int argc, char* argv[])
             return 1;
           }
         }
-        GPIOWrite(ERA, LOW);
-        usleep(10000);
-        GPIOWrite(RES, LOW);
-        usleep(10000);
-        GPIOWrite(RES, HIGH);
-        usleep(500000);
-        GPIOWrite(ERA, HIGH);
-
         /**********SOFT ERASE***********/
         /**********SOFT ERASE***********/
 
@@ -506,6 +503,20 @@ main(int argc, char* argv[])
         if (config.port)
         {
             bool res;
+
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
+	        GPIOWrite(ERA, LOW);
+			usleep(100000);
+			GPIOWrite(RES, LOW);
+			usleep(100000);
+			GPIOWrite(RES, HIGH);
+			usleep(500000);
+			GPIOWrite(ERA, HIGH);
+
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
+
             if (config.forceUsb)
                 res = samba.connect(portFactory.create(config.portArg, isUsb));
             else
@@ -609,6 +620,25 @@ main(int argc, char* argv[])
 
         if (config.reset)
             samba.reset();
+
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
+		GPIOWrite(RES, LOW);
+		usleep(100000);
+		GPIOWrite(RES, HIGH);
+		usleep(100000);
+		GPIOWrite(REQ, HIGH);
+		usleep(100000);
+		GPIOUnexport(REQ);
+		usleep(100000);
+		GPIOUnexport(PER);
+		usleep(100000);
+		GPIOUnexport(ERA);
+		usleep(100000);
+		GPIOUnexport(RES);
+		usleep(100000);
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
     }
     catch (exception& e)
     {
