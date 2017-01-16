@@ -32,6 +32,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "CmdOpts.h"
 #include "Samba.h"
@@ -41,6 +43,8 @@
 
 /**********SOFT ERASE***********/
 /**********SOFT ERASE***********/
+#define DIRECTION_MAX 35
+#define BUFFER_MAX 3
 #define IN  0
 #define OUT 1
 
@@ -54,7 +58,6 @@
 
 static int GPIOExport(int pin)
 {
-#define BUFFER_MAX 3
 	char buffer[BUFFER_MAX];
 	char path[DIRECTION_MAX];
 	ssize_t bytes_written;
@@ -80,6 +83,7 @@ static int GPIOUnexport(int pin)
 	char buffer[BUFFER_MAX];
 	ssize_t bytes_written;
 	int fd;
+	char path[DIRECTION_MAX];
 
 	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d", pin);
   if(0 != access(path, F_OK)) return(0);
@@ -100,7 +104,6 @@ static int GPIODirection(int pin, int dir)
 {
 	static const char s_directions_str[]  = "in\0out";
 
-#define DIRECTION_MAX 35
 	char path[DIRECTION_MAX];
 	int fd;
 
@@ -466,7 +469,7 @@ main(int argc, char* argv[])
         {
           tmp_per = GPIORead(PER);
           if (tmp_per == 1) break;
-          elseif(tmp_per == -1)
+          else if(tmp_per == -1)
           {
             fprintf(stderr, "no permision signal.\n");
             return 1;
