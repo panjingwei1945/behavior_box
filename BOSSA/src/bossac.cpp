@@ -39,6 +39,138 @@
 #include "FlashFactory.h"
 #include "Flasher.h"
 
+/**********SOFT ERASE***********/
+/**********SOFT ERASE***********/
+#define IN  0
+#define OUT 1
+
+#define LOW  0
+#define HIGH 1
+
+#define REQ 6
+#define PER 5
+#define ERA 7
+#define RES 4
+
+static int GPIOExport(int pin)
+{
+#define BUFFER_MAX 3
+	char buffer[BUFFER_MAX];
+	char path[DIRECTION_MAX];
+	ssize_t bytes_written;
+	int fd;
+
+	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d", pin);
+  if(0 == access(path, F_OK)) return(0);
+
+	fd = open("/sys/class/gpio/export", O_WRONLY);
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open export for writing!\n");
+		return(-1);
+	}
+
+	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
+	write(fd, buffer, bytes_written);
+	close(fd);
+	return(0);
+}
+
+static int GPIOUnexport(int pin)
+{
+	char buffer[BUFFER_MAX];
+	ssize_t bytes_written;
+	int fd;
+
+	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d", pin);
+  if(0 != access(path, F_OK)) return(0);
+
+	fd = open("/sys/class/gpio/unexport", O_WRONLY);
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open unexport for writing!\n");
+		return(-1);
+	}
+
+	bytes_written = snprintf(buffer, BUFFER_MAX, "%d", pin);
+	write(fd, buffer, bytes_written);
+	close(fd);
+	return(0);
+}
+
+static int GPIODirection(int pin, int dir)
+{
+	static const char s_directions_str[]  = "in\0out";
+
+#define DIRECTION_MAX 35
+	char path[DIRECTION_MAX];
+	int fd;
+
+	snprintf(path, DIRECTION_MAX, "/sys/class/gpio/gpio%d/direction", pin);
+	fd = open(path, O_WRONLY);
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open gpio direction for writing!\n");
+		return(-1);
+	}
+
+	if (-1 == write(fd, &s_directions_str[IN == dir ? 0 : 3], IN == dir ? 2 : 3)) {
+		fprintf(stderr, "Failed to set direction!\n");
+		return(-1);
+	}
+
+	close(fd);
+	return(0);
+}
+
+static int GPIORead(int pin)
+{
+#define VALUE_MAX 30
+	char path[VALUE_MAX];
+	char value_str[3];
+	int fd;
+
+	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
+	fd = open(path, O_RDONLY);
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open gpio value for reading!\n");
+		return(-1);
+	}
+
+	if (-1 == read(fd, value_str, 3)) {
+		fprintf(stderr, "Failed to read value!\n");
+		return(-1);
+	}
+
+	close(fd);
+
+	return(atoi(value_str));
+}
+
+static int GPIOWrite(int pin, int value)
+{
+	static const char s_values_str[] = "01";
+
+	char path[VALUE_MAX];
+	int fd;
+
+	snprintf(path, VALUE_MAX, "/sys/class/gpio/gpio%d/value", pin);
+	fd = open(path, O_WRONLY);
+	if (-1 == fd) {
+		fprintf(stderr, "Failed to open gpio value for writing!\n");
+		return(-1);
+	}
+
+	if (1 != write(fd, &s_values_str[LOW == value ? 0 : 1], 1)) {
+		fprintf(stderr, "Failed to write value!\n");
+		return(-1);
+	}
+
+	close(fd);
+	return(0);
+}
+/**********SOFT ERASE***********/
+/**********SOFT ERASE***********/
+
+
+
 using namespace std;
 
 class BossaConfig
@@ -238,6 +370,36 @@ main(int argc, char* argv[])
     char* pos;
     CmdOpts cmd(argc, argv, sizeof(opts) / sizeof(opts[0]), opts);
 
+
+
+/**********SOFT ERASE***********/
+/**********SOFT ERASE***********/
+    GPIOExport(PER);
+    sleep(0.01);
+    GPIODirection(PER, IN);
+
+    GPIOExport(REQ);
+    sleep(0.01);
+    GPIODirection(REQ, OUT);
+    sleep(0.01);
+    GPIOWrite(REQ, HIGH);
+
+    GPIOExport(RES);
+    sleep(0.01);
+    GPIODirection(RES, OUT);
+    sleep(0.01);
+    GPIOWrite(RES, HIGH);
+
+    GPIOExport(ERA);
+    sleep(0.01);
+    GPIODirection(ERA, OUT);
+    sleep(0.01);
+    GPIOWrite(ERA, HIGH);
+/**********SOFT ERASE***********/
+/**********SOFT ERASE***********/
+
+
+
     if ((pos = strrchr(argv[0], '/')) || (pos = strrchr(argv[0], '\\')))
         argv[0] = pos + 1;
 
@@ -295,6 +457,24 @@ main(int argc, char* argv[])
         Samba samba;
         PortFactory portFactory;
         FlashFactory flashFactory;
+
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
+        GPIOWrite(REQ, 0);
+        int tmp_per = 0;
+        while(1)
+        {
+          tmp_per = GPIORead(PER);
+          if (tmp_per == 1) break;
+          elseif(tmp_per == -1)
+          {
+            fprintf(stderr, "no permision signal.\n");
+            return 1;
+          }
+        }
+
+        /**********SOFT ERASE***********/
+        /**********SOFT ERASE***********/
 
         if (config.debug)
             samba.setDebug(true);
@@ -359,6 +539,16 @@ main(int argc, char* argv[])
         if (config.erase)
         {
             timer_start();
+            /**********SOFT ERASE***********/
+            /**********SOFT ERASE***********/
+            GPIOWrite(ERA, LOW);
+            GPIOWrite(RES, LOW);
+            sleep(0.01);
+            GPIOWrite(RES, HIGH);
+            sleep(0.5);
+            GPIOWrite(ERA, HIGH);
+            /**********SOFT ERASE***********/
+            /**********SOFT ERASE***********/
             flasher.erase();
             printf("done in %5.3f seconds\n", timer_stop());
         }
@@ -433,4 +623,3 @@ main(int argc, char* argv[])
 
     return 0;
 }
-
