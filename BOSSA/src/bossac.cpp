@@ -475,6 +475,12 @@ main(int argc, char* argv[])
             return 1;
           }
         }
+        GPIOWrite(ERA, LOW);
+        GPIOWrite(RES, LOW);
+        sleep(0.01);
+        GPIOWrite(RES, HIGH);
+        sleep(0.5);
+        GPIOWrite(ERA, HIGH);
 
         /**********SOFT ERASE***********/
         /**********SOFT ERASE***********/
@@ -542,16 +548,6 @@ main(int argc, char* argv[])
         if (config.erase)
         {
             timer_start();
-            /**********SOFT ERASE***********/
-            /**********SOFT ERASE***********/
-            GPIOWrite(ERA, LOW);
-            GPIOWrite(RES, LOW);
-            sleep(0.01);
-            GPIOWrite(RES, HIGH);
-            sleep(0.5);
-            GPIOWrite(ERA, HIGH);
-            /**********SOFT ERASE***********/
-            /**********SOFT ERASE***********/
             flasher.erase();
             printf("done in %5.3f seconds\n", timer_stop());
         }
