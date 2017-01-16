@@ -30,9 +30,13 @@ This repository contains all the firmware and src of behavior_box system.
 
 3. Then you can attach due to MCU board.
 
-## Compile and Upload firmware to Due
+## Compile and Upload firmware from raspberry pi3 to Due
 
-### Compiling
+### Patch bossac
+
+Before upload firmware to Due, the programmer bossac must be patched. The new programmer will trigger the erase and reset proccess. Original bossac locate in "/home/pi/.arduino15//packages/arduino/tools/bossac/1.6.1-arduino/bossac". And  replace it with [this one][6].
+
+### Compile
 
 ```sh
 /home/pi/arduino-1.6.11/arduino-builder -dump-prefs -logger=machine -hardware /home/pi/arduino-1.6.11/hardware -hardware /home/pi/.arduino15/packages -tools /home/pi/arduino-1.6.11/tools-builder -tools /home/pi/arduino-1.6.11/hardware/tools/avr -tools /home/pi/.arduino15/packages -built-in-libraries /home/pi/arduino-1.6.11/libraries -libraries /home/pi/Arduino/libraries -fqbn=arduino:sam:arduino_due_x_dbg -vid-pid=0X2341_0X003D -ide-version=10611 -build-path /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp -warnings=none -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.bossac.path=/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino -prefs=runtime.tools.arm-none-eabi-gcc.path=/home/pi/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/4.8.3-2014q1 -verbose /home/pi/Software/arduino-1.6.9/examples/01.Basics/Blink/Blink.ino
@@ -40,7 +44,7 @@ This repository contains all the firmware and src of behavior_box system.
 /home/pi/arduino-1.6.11/arduino-builder -compile -logger=machine -hardware /home/pi/arduino-1.6.11/hardware -hardware /home/pi/.arduino15/packages -tools /home/pi/arduino-1.6.11/tools-builder -tools /home/pi/arduino-1.6.11/hardware/tools/avr -tools /home/pi/.arduino15/packages -built-in-libraries /home/pi/arduino-1.6.11/libraries -libraries /home/pi/Arduino/libraries -fqbn=arduino:sam:arduino_due_x_dbg -vid-pid=0X2341_0X003D -ide-version=10611 -build-path /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp -warnings=none -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.bossac.path=/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino -prefs=runtime.tools.arm-none-eabi-gcc.path=/home/pi/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/4.8.3-2014q1 -verbose /home/pi/Software/arduino-1.6.9/examples/01.Basics/Blink/Blink.ino
 ```
 
-### Uploading
+### Upload
 
 ```sh
 #this for USB program port
@@ -55,3 +59,4 @@ stty -F /dev/ttyAMA0 speed 1200 cs8;/home/pi/.arduino15/packages/arduino/tools/b
 [3]: http://www.fourwalledcubicle.com/LUFA.php "LUFA"
 [4]: https://sourceforge.net/projects/avrdudegui/?source=typ_redirect  "AVRdue GUI"
 [5]: http://kevincuzner.com/2013/05/27/raspberry-pi-as-an-avr-programmer/ "raspberry-pi-as-an-avr-programmer"
+[6]:
