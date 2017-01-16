@@ -34,25 +34,37 @@ This repository contains all the firmware and src of behavior_box system.
 
 ### Patch bossac
 
-Before upload firmware to Due, the programmer bossac must be patched. The new programmer will trigger the erase and reset proccess. Original bossac locate in "/home/pi/.arduino15//packages/arduino/tools/bossac/1.6.1-arduino/bossac". And  replace it with [this one][6].
+Before upload firmware to Due, the programmer bossac must be patched. The new programmer will trigger the erase and reset proccess before uploading. Original bossac locate in "/home/pi/.arduino15//packages/arduino/tools/bossac/1.6.1-arduino/bossac", and replace it with [patched bossac][6].
 
-### Compile
+After patch, you can simply use arduino IDE to compile and upload your code.
 
-```sh
-/home/pi/arduino-1.6.11/arduino-builder -dump-prefs -logger=machine -hardware /home/pi/arduino-1.6.11/hardware -hardware /home/pi/.arduino15/packages -tools /home/pi/arduino-1.6.11/tools-builder -tools /home/pi/arduino-1.6.11/hardware/tools/avr -tools /home/pi/.arduino15/packages -built-in-libraries /home/pi/arduino-1.6.11/libraries -libraries /home/pi/Arduino/libraries -fqbn=arduino:sam:arduino_due_x_dbg -vid-pid=0X2341_0X003D -ide-version=10611 -build-path /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp -warnings=none -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.bossac.path=/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino -prefs=runtime.tools.arm-none-eabi-gcc.path=/home/pi/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/4.8.3-2014q1 -verbose /home/pi/Software/arduino-1.6.9/examples/01.Basics/Blink/Blink.ino
+### CLI mode
 
-/home/pi/arduino-1.6.11/arduino-builder -compile -logger=machine -hardware /home/pi/arduino-1.6.11/hardware -hardware /home/pi/.arduino15/packages -tools /home/pi/arduino-1.6.11/tools-builder -tools /home/pi/arduino-1.6.11/hardware/tools/avr -tools /home/pi/.arduino15/packages -built-in-libraries /home/pi/arduino-1.6.11/libraries -libraries /home/pi/Arduino/libraries -fqbn=arduino:sam:arduino_due_x_dbg -vid-pid=0X2341_0X003D -ide-version=10611 -build-path /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp -warnings=none -prefs=build.warn_data_percentage=75 -prefs=runtime.tools.bossac.path=/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino -prefs=runtime.tools.arm-none-eabi-gcc.path=/home/pi/.arduino15/packages/arduino/tools/arm-none-eabi-gcc/4.8.3-2014q1 -verbose /home/pi/Software/arduino-1.6.9/examples/01.Basics/Blink/Blink.ino
-```
-
-### Upload
+You also can use command line to compile and upload your code.(bossac patch needed)
+These scripts are in [./raspberry/CLI][7].
 
 ```sh
-#this for USB program port
-stty -F /dev/ttyACM0 speed 1200 cs8 -cstopb -parenb; /home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino/bossac -i -d --port=ttyACM0 -U false -e -w -v -b /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp/Blink.ino.bin -R
+# compile, and binary file will be putted in a temporary folder.
+./DueCompile.sh Blink/Blink.ino
 
-#this for raspberry pi 3 ttyAMA0 port
-stty -F /dev/ttyAMA0 speed 1200 cs8;/home/pi/.arduino15/packages/arduino/tools/bossac/1.6.1-arduino/bossac -i -d --port=ttyAMA0 -U false -e -w -v -b /tmp/build965ab5f1a67792a9c5043012fccdb530.tmp/Blink.ino.bin -R
+# compile and specify a folder which binary file will be putted in.
+./DueCompile.sh Blink/Blink.ino ./FirmwarFolder
+
 ```
+
+
+```sh
+# upload
+./DueUpload.sh Blink.ino.bin
+
+```
+
+```sh
+# Compile and upload
+./DueCompileUpload.sh Blink/Blink.ino
+
+```
+
 
 [1]: https://raw.githubusercontent.com/panjingwei1945/behavior_box/master/LUFA-100807/Projects/atmega16u2_due/Arduino-usbserial.hex  "Arduino-usbserial.hex"
 [2]: https://github.com/panjingwei1945/behavior_box/tree/maste/LUFA-100807/Projects/atmega16u2_due
@@ -60,3 +72,4 @@ stty -F /dev/ttyAMA0 speed 1200 cs8;/home/pi/.arduino15/packages/arduino/tools/b
 [4]: https://sourceforge.net/projects/avrdudegui/?source=typ_redirect  "AVRdue GUI"
 [5]: http://kevincuzner.com/2013/05/27/raspberry-pi-as-an-avr-programmer/ "raspberry-pi-as-an-avr-programmer"
 [6]: https://github.com/panjingwei1945/behavior_box/raw/master/BOSSA/bin/bossac
+[7]: https://github.com/panjingwei1945/behavior_box/tree/master/raspboard/CLI
