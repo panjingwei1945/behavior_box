@@ -5,13 +5,13 @@ USERLIB="/home/pi/Arduino/libraries"
 CODE=$1
 CODEFILENAME=`basename $1`
 
-if [ $# == 1 ]
+if[ -n $2 ]
 then
+  BUILDPATH=$2
+else
   TEMPFILE="tmp_`date +%y%m%d%H%M%S`"
   BUILDPATH="/tmp/${TEMPFILE}"
   mkdir ${BUILDPATH}
-else
-  BUILDPATH=$2
 fi
 
 BINFILE=${BUILDPATH}/${CODEFILENAME}.bin
