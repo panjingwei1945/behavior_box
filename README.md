@@ -2,11 +2,23 @@
 # behavior_box
 
 This repository contains all the firmware and src of behavior_box system.
+# RaspBoard
+
+## Upload firmware to onboard arduino
+
+There is a atmega328p to manage ATX power supply on RaspBoard. It work  at 3.3V, 8MHz. So you can consider it as a arduino pro mini. You can upload firemware through USBtinyISP or linuxspi.
+
+
+## Real time clock
+
+There is a RTC(real time clock) chip on raspboard. Raspberry doesn't have any RTC chip on it. It just connect to server and read web time. So if the web is unreachable, then we can get right time from the RTC chip on raspboard. Before using it, we should put in battery and set time.
+
+
 # MCU board
 
 ## Due modification
 
-> Arduino Due is different from the avr based arduino board (like uno). It must be erased before uploading. Therefore Due must be modified before assembling, to ensure raspberry pi can upload program from it's onboard native serial port(ttyAMA0).
+> Arduino Due is different from the avr based arduino board (like uno). It must be erased before uploading. For normal usage, the atmega16u2 acting as USB bridge to expose the UART, If the host pc set it's sertial port at baud rate 1200, the ATMEGA16U2 will assert the Erase pin and Reset pin of the SAM3X. Then SAM3X will switch to bootloader mode. But native serial port on raspberry pi doesn't have this  function. Therefore Due must be added extra pins to receive erase and reset signal.
 
 1. Solder the **missing pin** on Due
   ![/README/SolderMissingPins.PNG](/README/SolderMissingPins.PNG)
@@ -18,7 +30,7 @@ This repository contains all the firmware and src of behavior_box system.
   [precompiled hexfile][1]
   [source code][2]
 
-  > With new firmware, the onboard programmer atmega16u2 can recieve the erase signal from raspberry pi, then it process the erasing and reseting routine. Because this firmware is base on [LUFA][3]. So the firmware can't be uploaded by arduino IDE. In stead of it, you should use external programmer (for example , USBtinyISP) to upload the firmware.
+  > With new firmware, the onboard programmer atmega16u2 can recieve the erase signal from raspberry pi, then it process the erasing and reseting routine. Because this firmware is base on [LUFA][3]. So the firmware can't be uploaded with arduino IDE. In stead, you can use external programmer (for example , USBtinyISP) to upload the firmware.
 
     For **windows** user, you can upload hexfile with software "AVRdude GUI", you can download it [here][4].
 
@@ -64,6 +76,7 @@ These scripts are in [./raspberry/CLI][7].
 ./DueCompileUpload.sh Blink/Blink.ino
 
 ```
+
 
 
 [1]: https://raw.githubusercontent.com/panjingwei1945/behavior_box/master/LUFA-100807/Projects/atmega16u2_due/Arduino-usbserial.hex  "Arduino-usbserial.hex"
