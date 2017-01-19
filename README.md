@@ -11,8 +11,22 @@ There is a atmega328p to manage ATX power supply on RaspBoard. It work  at 3.3V,
 
 ## Real time clock
 
-There is a RTC(real time clock) chip on raspboard. Raspberry doesn't have any RTC chip on it. It just connect to server and read web time. So if the web is unreachable, then we can get right time from the RTC chip on raspboard. Before using it, we should put in battery and set time.
+Because raspberry pi doesn't have any real time clock(RTC) chip on raspboard. RTC chip on it. So when you power on it, raspberry pi must connect to internet and read web time. But when internet is unreachalbe, system time goes wrong. So we design a external RTC for raspberry pi on the raspboard. Therefor you can get "real time" without internet.
 
+Before using it, you should put in battery(CR2302) and set time. There are three scripts in folder [./raspberry/RTC][8] help you read or set RTC chip .
+
+```sh
+# read RTC
+./readRTC.sh
+```
+```sh
+# read time from system and write it to RTC
+./systime2RTC.sh
+```
+```sh
+# read time from RTC and write it to system
+sudo ./RTC2systime.sh
+```
 
 # MCU board
 
@@ -79,10 +93,11 @@ These scripts are in [./raspberry/CLI][7].
 
 
 
-[1]: https://raw.githubusercontent.com/panjingwei1945/behavior_box/master/LUFA-100807/Projects/atmega16u2_due/Arduino-usbserial.hex  "Arduino-usbserial.hex"
-[2]: https://github.com/panjingwei1945/behavior_box/tree/maste/LUFA-100807/Projects/atmega16u2_due
+[1]: https://raw.githubusercontent.com/xulab/behavior_box/master/LUFA-100807/Projects/atmega16u2_due/Arduino-usbserial.hex  "Arduino-usbserial.hex"
+[2]: https://github.com/xulab/behavior_box/tree/maste/LUFA-100807/Projects/atmega16u2_due
 [3]: http://www.fourwalledcubicle.com/LUFA.php "LUFA"
 [4]: https://sourceforge.net/projects/avrdudegui/?source=typ_redirect  "AVRdue GUI"
 [5]: http://kevincuzner.com/2013/05/27/raspberry-pi-as-an-avr-programmer/ "raspberry-pi-as-an-avr-programmer"
-[6]: https://github.com/panjingwei1945/behavior_box/raw/master/BOSSA/bin/bossac
-[7]: https://github.com/panjingwei1945/behavior_box/tree/master/raspboard/CLI
+[6]: https://github.com/xulab/behavior_box/raw/master/BOSSA/bin/bossac
+[7]: https://github.com/xulab/behavior_box/tree/master/raspboard/CLI
+[8]: https://github.com/xulab/behavior_box/tree/master/raspboard/RTC
