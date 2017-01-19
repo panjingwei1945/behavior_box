@@ -14,11 +14,11 @@ tmp_date=`date +%y%m%d%H%M%S`
 
 year=0x${tmp_date:0:2}
 mon=0x${tmp_date:2:2}
-day=0x0${tmp_date:4:2}
-date=0x${tmp_date:6:2}
-hour=0x${tmp_date:8:2}
-min=0x${tmp_date:10:2}
-sec=0x${tmp_date:12:2}
+day=0x0$((`date +%w`+1))
+date=0x${tmp_date:4:2}
+hour=0x${tmp_date:6:2}
+min=0x${tmp_date:8:2}
+sec=0x${tmp_date:10:2}
 
 echo "System time is:${tmp_date}"
 
