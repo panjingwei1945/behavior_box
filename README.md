@@ -6,7 +6,23 @@ This repository contains all the firmware and src of behavior_box system.
 
 ## Upload firmware to onboard arduino
 
-There is a atmega328p to manage ATX power supply on RaspBoard. It work  at 3.3V, 8MHz. So you can consider it as a arduino pro mini. You can upload firemware through USBtinyISP or linuxspi.
+There is a atmega328p to manage ATX power supply on RaspBoard. It work  at 3.3V, 8MHz. So you can consider it as a "arduino pro mini". You can upload firemware through USBtinyISP or linuxspi. The firmware is in ./raspboard/ATX/RaspBoardPowCtrl/
+
+## Install ATX service
+
+Then raspberry pi can't control ATX power supply directly. So we design a circuit of atmega328p to manage ATX. And raspberry pi will send system status to atmega328p to control ATX indirectly.
+
+It can send two kinds of status. First one is "system on". When atmega328p get this signal, it will hold on ATX power supply. And when it get "system off" signal, it will hold on ATX for one minitus, then turn off. Second one is "reset". In this situation, atmega328p will hold on ATX and wait "system on" signal for 5 minitus.
+
+Script is in "./raspboard/ATX/"
+
+```sh
+# install sys on service
+sudo ./sys_on_service.sh
+
+# install reset service
+sudo ./reset_service.sh
+```
 
 
 ## Real time clock
@@ -27,6 +43,7 @@ Before using it, you should put in battery(CR2302) and set time. There are three
 # read time from RTC and write it to system
 sudo ./RTC2systime.sh
 ```
+
 
 # MCU board
 
