@@ -1,4 +1,3 @@
-[TOC]
 # behavior_box
 ## Project:
 Behavior box is a sound proof box for small animal(mouse, rat, marmoset, etc.) behavior task (especially auditory task) and electrical experiment, fiberphotometry recording.
