@@ -1,7 +1,7 @@
 [TOC]
 # behavior_box
 ## Project:
-Behavior box is a sound proof box for small animal(mouse, rat, marmoset, etc.) behavior task (especially auditory tast) and electrical experiment, fiberphotometry recording.
+Behavior box is a sound proof box for small animal(mouse, rat, marmoset, etc.) behavior task (especially auditory task) and electrical experiment, fiberphotometry recording.
 
 ## Description:
 Behavior box incudes the structure and design of sound proof box for small animal behavior investigation. People can build a sound proof box base on this project for small animal behavior task training and recording  various physiological signals, such as electrophysiology and biofluorescence. This designation is publish in “Sensory-to-Category Transformation via Dynamic Reorganization of Ensemble Structures in Mouse Auditory Cortex”(2019) and “Causal contributions of parietal cortex to perceptual decision-making during stimulus categorization”(2019). 
