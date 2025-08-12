@@ -9,13 +9,13 @@ Behavior box incudes the structure and design of sound proof box for small anima
 
 ## Contents:
 ### inner box design
-![/README/innerBox.png](/README/innerBox.png)
+![/README/innerBox.png](./README/innerBox.png)
 
 ### out box design
-![/README/outBox.png](/README/outBox.png)
+![/README/outBox.png](./README/outBox.png)
 
 ### overall
-![/README/overall.png](/README/overall.png)
+![/README/overall.png](./README/overall.png)
 
 ## Credits:
 This repository was created by Jingwei Pan and maintained by Ninglong Xu group at Center for Excellence in Brain Science and Intelligence Technology (CEBSIT), Institute of Neuroscience(ION), Chinese Academy of Sciences. 
